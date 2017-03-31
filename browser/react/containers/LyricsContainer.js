@@ -4,7 +4,7 @@ import store from '../store'
 import {setLyrics, fetchLyrics} from '../action-creators/lyrics';
 
 
-class LyricsContainer extends React.Component{
+class LyricsContainer extends React.Component {
     constructor(props){
         super(props);
         this.state = Object.assign({
@@ -44,12 +44,12 @@ class LyricsContainer extends React.Component{
     }
 
     render(){
-
+        // console.log('state in LyricsContainer:', this.state)
         const props = {
             setArtist: this.handleArtistInput,
             setSong: this.handleSongInput,
             handleSubmit: this.handleSubmit,
-            text: this.state.text,
+            text: this.state.lyrics.text,
             artistQuery: this.state.artistQuery,
             songQuery: this.state.songQuery,
         };

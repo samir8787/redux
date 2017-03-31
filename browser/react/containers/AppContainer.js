@@ -10,13 +10,15 @@ import Album from '../components/Album';
 import Sidebar from '../components/Sidebar';
 import Player from '../components/Player';
 
+import store from '../store'
+import { stopPlaying, startPlaying, setCurrentSong, setList, play, pause, load } from '../action-creators/player'
 import { convertAlbum, convertAlbums, convertSong, skip } from '../utils';
 
 export default class AppContainer extends Component {
 
   constructor (props) {
     super(props);
-    this.state = initialState;
+    this.state = Object.assign(initialState, store.getState());
 
     this.toggle = this.toggle.bind(this);
     this.toggleOne = this.toggleOne.bind(this);
@@ -31,6 +33,9 @@ export default class AppContainer extends Component {
   }
 
   componentDidMount () {
+    this.unsubscribe = store.subscribe(() => {
+        this.setState(store.getState());
+    });
 
     Promise
       .all([
@@ -47,6 +52,10 @@ export default class AppContainer extends Component {
       this.setProgress(AUDIO.currentTime / AUDIO.duration));
   }
 
+  componentWillUnmount() {
+      this.unsubscribe();
+  }
+
   onLoad (albums, artists, playlists) {
     this.setState({
       albums: convertAlbums(albums),
@@ -56,22 +65,15 @@ export default class AppContainer extends Component {
   }
 
   play () {
-    AUDIO.play();
-    this.setState({ isPlaying: true });
+    store.dispatch(play())
   }
 
   pause () {
-    AUDIO.pause();
-    this.setState({ isPlaying: false });
+    store.dispatch(pause())
   }
 
   load (currentSong, currentSongList) {
-    AUDIO.src = currentSong.audioUrl;
-    AUDIO.load();
-    this.setState({
-      currentSong: currentSong,
-      currentSongList: currentSongList
-    });
+    store.dispatch(load())
   }
 
   startSong (song, list) {
@@ -196,6 +198,7 @@ export default class AppContainer extends Component {
       addSongToPlaylist: this.addSongToPlaylist
     });
 
+    console.log('state in AppContainer:', this.state)
     return (
       <div id="main" className="container-fluid">
         <div className="col-xs-2">
@@ -207,9 +210,9 @@ export default class AppContainer extends Component {
         }
         </div>
         <Player
-          currentSong={this.state.currentSong}
-          currentSongList={this.state.currentSongList}
-          isPlaying={this.state.isPlaying}
+          currentSong={this.state.player.currentSong}
+          currentSongList={this.state.player.currentSongList}
+          isPlaying={this.state.player.isPlaying}
           progress={this.state.progress}
           next={this.next}
           prev={this.prev}

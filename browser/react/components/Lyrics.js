@@ -1,6 +1,7 @@
 import React from 'react'
 
 const Lyrics = (props) => {
+
     const {text, setArtist, artistQuery, setSong, songQuery, handleSubmit } = props.props;
     return (
         <div className="well" style={{marginTop: '20px'}}>
