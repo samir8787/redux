@@ -73,7 +73,7 @@ export default class AppContainer extends Component {
   }
 
   load (currentSong, currentSongList) {
-    store.dispatch(load())
+    store.dispatch(load(currentSong, currentSongList))
   }
 
   startSong (song, list) {
@@ -83,7 +83,7 @@ export default class AppContainer extends Component {
   }
 
   toggleOne (selectedSong, selectedSongList) {
-    if (selectedSong.id !== this.state.currentSong.id)
+    if (selectedSong.id !== this.state.player.currentSong.id)
       this.startSong(selectedSong, selectedSongList);
     else this.toggle();
   }
@@ -197,8 +197,6 @@ export default class AppContainer extends Component {
       loadSongs: this.loadSongs,
       addSongToPlaylist: this.addSongToPlaylist
     });
-
-    console.log('state in AppContainer:', this.state)
     return (
       <div id="main" className="container-fluid">
         <div className="col-xs-2">

@@ -45,6 +45,7 @@ export const pause = () => {
 
 export const load = (currentSong, currentSongList) => {
     return function(dispatch) {
+        console.log(' Load Player Action currentSong', currentSong);
         AUDIO.src = currentSong.audioUrl;
         AUDIO.load();
         dispatch( setCurrentSong(currentSong));
